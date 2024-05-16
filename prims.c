@@ -1,0 +1,79 @@
+#include <stdio.h>
+
+int dist[100][100], T[100][100], mincost, near[100];
+
+
+int select(int n) {
+    int min = 99999;
+    int min_index = -1;
+
+    for (int i = 1; i <= n; i++) {
+        if (near[i] != 0 && dist[i][near[i]] < min) {
+            min = dist[i][near[i]];
+            min_index = i;
+        }
+    }
+    return min_index;
+}
+
+void prims(int n) {
+    int min = dist[1][1];
+    int i, j, k = 0, l = 0;
+    mincost = 0;
+
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            if (min > dist[i][j]) {
+                min = dist[i][j];
+                k = i;
+                l = j;
+            }
+        }
+    }
+
+    T[1][1] = k;
+    T[1][2] = l;
+    mincost = mincost + dist[k][l];
+
+    for (i = 1; i <= n; i++) {
+        if (dist[i][k] < dist[i][l])
+            near[i] = k;
+        else
+            near[i] = l;
+    }
+    near[k] = near[l] = 0;
+
+    for (i = 2; i <= n - 1; i++) {
+        j = select(n);
+        T[i][1] = j;
+        T[i][2] = near[j];
+        mincost = mincost + dist[j][near[j]];
+        near[j] = 0;
+
+        for (int k = 1; k <= n; k++) {
+            if ((near[k] != 0) && (dist[k][near[k]] > dist[j][k])) {
+                near[k] = j;
+            }
+        }
+    }
+
+    printf("Edges of spanning tree:\n");
+    for (i = 1; i <= n - 1; i++) {
+        printf("%d %d\n", T[i][1], T[i][2]);
+    }
+    printf("Minimum cost: %d", mincost);
+}
+
+int main() {
+    int n;
+    printf("Enter no.of vertices : ");
+    scanf("%d", &n);
+    printf("Enter the adjacency matrix:\n");
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            scanf("%d", &dist[i][j]);
+        }
+    }
+    prims(n);
+    return 0;
+}
