@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include <stdbool.h>
 
 #define MAX_SIZE 100
 
-bool isValid(int matrix[MAX_SIZE][MAX_SIZE], int n) {
+int isValid(int matrix[MAX_SIZE][MAX_SIZE], int n) {
     int rowCount[MAX_SIZE][MAX_SIZE + 1] = {0};
     int colCount[MAX_SIZE][MAX_SIZE + 1] = {0};
 
@@ -17,18 +16,13 @@ bool isValid(int matrix[MAX_SIZE][MAX_SIZE], int n) {
 
     for (int i = 0; i < n; i++) {
         for (int num = 1; num <= n; num++) {
-            if (rowCount[i][num] != 1) {
-                return false;
-            }
-        }
-        for (int num = 1; num <= n; num++) {
-            if (colCount[i][num] != 1) {
-                return false;
+            if (rowCount[i][num] != 1 || colCount[i][num] != 1) {
+                return 0;
             }
         }
     }
 
-    return true;
+    return 1;
 }
 
 int main() {
@@ -43,7 +37,7 @@ int main() {
         }
     }
 
-    bool result = isValid(matrix, n);
+    int result = isValid(matrix, n);
 
     if (result) {
         printf("true\n");
